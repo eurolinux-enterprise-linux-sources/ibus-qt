@@ -2,7 +2,7 @@
 
 Name:       ibus-qt
 Version:    1.3.2
-Release:    2%{?dist}
+Release:    4%{?dist}
 Summary:    Qt IBus library and Qt input method plugin
 License:    GPLv2+
 Group:      System Environment/Libraries
@@ -76,6 +76,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc docs/html
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 1.3.2-4
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.3.2-3
+- Mass rebuild 2013-12-27
+
 * Thu Mar 21 2013 Takao Fujiwara <tfujiwar@redhat.com> - 1.3.2-2
 - Added ibus-qt-HEAD.patch to fix bug 921164.
 
