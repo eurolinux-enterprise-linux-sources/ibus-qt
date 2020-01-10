@@ -1,0 +1,41 @@
+From b5bd6307c83cf900f9f8c9a5226a78bcb825e332 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Thu, 21 Mar 2013 11:27:08 +0900
+Subject: [PATCH] Enable dead_belowdot with de layout.
+
+AltGr + j returns dead_belowdot in de layout.
+E.g. AltGr + j, s returns U+1E63 with de.
+XLookupString can get dead_belowdot but the return value is 0.
+I think XLookupString does not failed with return value 0.
+
+BUG=RH#921164
+
+Review URL: https://codereview.appspot.com/7812045
+---
+ qtim/ibus-input-context.cpp | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/qtim/ibus-input-context.cpp b/qtim/ibus-input-context.cpp
+index 8c00a10..0c9e547 100644
+--- a/qtim/ibus-input-context.cpp
++++ b/qtim/ibus-input-context.cpp
+@@ -248,9 +248,13 @@ translate_x_key_event (XEvent *xevent, uint *keyval, uint *keycode, uint *state)
+         *state |= IBus::ReleaseMask;
+ 
+     char key_str[64];
+-    if (XLookupString (&xevent->xkey, key_str, sizeof (key_str), (KeySym *)keyval, 0) <= 0) {
+-        *keyval = (quint32) XLookupKeysym (&xevent->xkey, 0);
+-    }
++    /* Follow gtkxim module.
++     * https://git.gnome.org/browse/gtk+/tree/modules/input/gtkimcontextxim.c#n736
++     * I think XLookupString can get right keyval even if the return value
++     * is 0 but key_str might not be a string.
++     * And XLookupString won't return the negative value in my test. */
++    XLookupString (&xevent->xkey, key_str, sizeof (key_str),
++                   (KeySym *)keyval, 0);
+ 
+     return true;
+ 
+-- 
+1.8.0
+
